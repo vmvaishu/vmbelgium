@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VM Belgium</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --accent-gold: #c5a059; 
+            --belgian-chocolate: #3d2b1f; 
+            --soft-cream: #fff9f0; 
+        }
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: linear-gradient(135deg, #fff9f0 0%, #f7e8d0 50%, #fff9f0 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--belgian-chocolate); 
+            overflow-x: hidden; 
+        }
+
+        h1, h2, h3, h4, .navbar-brand { font-family: 'Playfair Display', serif; }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+    
+        .navbar { background: rgba(255, 249, 240, 0.8) !important;
+         backdrop-filter: blur(15px); border-bottom: 
+         1px solid rgba(197, 160, 89, 0.2); 
+         }
+        .cart-badge { background: var(--accent-gold); 
+        color: white; 
+        border-radius: 50%; 
+        padding: 2px 7px;
+         font-size: 11px; 
+         position: absolute; 
+         top: -5px; 
+         right: -10px;
+          font-weight: bold; }
+
+        .hero {
+            height: 85vh;
+            background: linear-gradient(rgba(61, 43, 31, 0.5), rgba(61, 43, 31, 0.5)), url('ice.png');
+            background-size: cover;
+             background-position: center;
+            background-attachment: fixed;
+            display: flex; 
+            align-items: center;
+             justify-content: center;
+              color: white;
+               text-align: center;
+        }
+
+    
+        .ice-cream-card {
+            background: rgba(255, 255, 255, 0.9);
+             border: none; 
+             border-radius: 25px;
+            overflow: hidden; 
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+        .ice-cream-card:hover { transform: scale(1.03);
+             box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .product-img { height: 260px; 
+            width: 100%; 
+            object-fit: cover;
+             transition: 0.8s; }
+        .ice-cream-card:hover .product-img { transform: scale(1.1); }
+
+        .btn-add { background: var(--belgian-chocolate); 
+            color: white; border-radius: 50px;
+             padding: 10px 25px;
+              border: none;
+               transition: 0.3s; }
+        .btn-add:hover { background: var(--accent-gold);
+             transform: translateY(-3px); 
+             color: white; }
+
+       
+        .offcanvas { background-color: var(--soft-cream);
+             border-left: 3px solid var(--accent-gold); }
+        .cart-item { border-bottom: 1px solid rgba(61, 43, 31, 0.1); 
+            padding: 15px 0; }
+        
+        .gourmet-tag { background: var(--accent-gold);
+             color: white;
+              font-size: 10px; 
+             padding: 2px 8px; 
+             border-radius: 10px; 
+             vertical-align: middle; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top py-3">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-2" href="#">VM <span style="color: var(--accent-gold);">BELGIUM</span></a>
+        
+        <div class="d-flex align-items-center">
+            <button class="btn btn-outline-dark rounded-pill px-4 me-4 d-none d-md-block" onclick="joinClub()">
+                <i class="fa-solid fa-crown me-2" style="color: var(--accent-gold);"></i> Membership Club
+            </button>
+            
+            <div class="position-relative" style="cursor: pointer;" data-bs-toggle="offcanvas" data-bs-target="#cartSidebar">
+                <i class="fa-solid fa-bag-shopping fs-3"></i>
+                <span class="cart-badge" id="cartCount">0</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="container" data-aos="zoom-out" data-aos-duration="1200">
+        <h1 class="display-1 fw-bold mb-3">Pure Belgian Bliss</h1>
+        <p class="fs-4 mb-4">Artisan gelato crafted with heritage chocolate and fresh dairy.</p>
+        <a href="#products" class="btn btn-lg btn-light rounded-pill px-5 py-3 shadow">Discover Collection</a>
+    </div>
+</header>
+
+<section id="products" class="container py-5 mt-5">
+    <div class="text-center mb-5" data-aos="fade-up">
+        <h2 class="display-5 fw-bold">The Signature 10</h2>
+        <p class="text-muted">Hand-churned in small batches</p>
+        <div style="width: 60px; height: 3px; background: var(--accent-gold); margin: 15px auto;"></div>
+    </div>
+
+    <div class="row g-4" id="productGrid">
+        </div>
+</section>
+
+<div class="offcanvas offcanvas-end" id="cartSidebar">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="fw-bold mb-0">Your Selection</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+        <div id="cartItems" class="flex-grow-1">
+            </div>
+        <div class="mt-4 border-top pt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fs-5">Subtotal:</span>
+                <span id="cartTotal" class="fs-4 fw-bold text-dark">₹0</span>
+            </div>
+            <button class="btn btn-add w-100 py-3 fs-5 shadow-sm" onclick="checkout()">
+                Complete Order
+            </button>
+            <p class="text-center text-muted small mt-2">Free refrigerated delivery on orders over ₹1,500</p>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center py-5 mt-5 border-top">
+    <p class="mb-0 text-muted">&copy; 2026 VM Belgium Artisan Gelateria. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+    
+    const TO_INR = 107.6; 
+    const CURRENCY_SYMBOL = "₹";
+
+    const products = [
+    // --- ARTISAN ICE CREAM SERIES ---
+    { id: 1, name: "Dark Truffle", price: 8.50, img: "chocolate.png" },
+    { id: 2, name: "Salted Caramel", price: 7.20, img: "caramel.png" },
+    { id: 3, name: "Madagascar Vanilla", price: 6.80, img: "salt.png" },
+    { id: 4, name: "Pistachio Praline", price: 9.40, img: "pista.png" },
+    { id: 5, name: "Wild Strawberry", price: 7.50, img: "strawberry.png" },
+    { id: 6, name: "Belgian Coffee", price: 8.00, img: "coffee.png" },
+    { id: 7, name: "Lotus Speculoos", price: 8.20, img: "lotus.png" },
+    { id: 8, name: "Hazelnut Gianduja", price: 9.80, img: "hazel.png" },
+    { id: 9, name: "White Chocolate Rose", price: 8.90, img: "mid.png" },
+    { id: 10, name: "Midnight Mint", price: 7.80, img: "mint.png" },
+    { id: 14, name: "Saffron Pistachio", price: 10.50, img: "saffron.png", tag: "Limited" },
+    { id: 15, name: "Blueberry Cheesecake", price: 8.70, img: "blue.png" },
+
+    // --- BOBA TEA LUXE SERIES ---
+    { id: 11, name: "Royal Belgian Milk Tea", price: 6.50, img: "boba1.png", tag: "Boba" },
+    { id: 12, name: "Speculoos Cookie Boba", price: 7.80, img: "boba2.png", tag: "Boba" },
+    { id: 13, name: "Golden Mango Sago Boba", price: 7.20, img: "boba3.png", tag: "Boba" },
+    { id: 16, name: "Strawberry White Choc Boba", price: 7.50, img: "boba4.png", tag: "Boba" },
+    { id: 17, name: "Matcha Zen Boba", price: 8.20, img: "boba5.png", tag: "Boba" },
+    { id: 18, name: "Midnight Taro Boba", price: 7.40, img: "boba6.png", tag: "Boba" }
+];
+
+    let cart = JSON.parse(localStorage.getItem('vm_cart')) || [];
+
+   
+    window.onload = () => {
+        AOS.init({ duration: 800, once: true });
+        renderProducts();
+        updateCartUI();
+    };
+
+    
+    function formatINR(euroPrice) {
+        return CURRENCY_SYMBOL + Math.round(euroPrice * TO_INR).toLocaleString('en-IN');
+    }
+
+    function renderProducts() {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = products.map((p, index) => `
+            <div class="col-md-6 col-lg-4 col-xl-3" data-aos="fade-up" data-aos-delay="${index * 50}">
+                <div class="card ice-cream-card">
+                    <img src="${p.img}" class="product-img" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x300?text=${p.name}'">
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold mb-1">${p.name}</h5>
+                        <p class="text-muted small text-uppercase mb-3" style="letter-spacing: 2px">Artisan Series</p>
+                        <h4 class="mb-3" style="color: var(--accent-gold)">${formatINR(p.price)}</h4>
+                        <button class="btn btn-add shadow-sm" onclick="addToCart(${p.id})">Add to Bag</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        cart.push(product);
+        localStorage.setItem('vm_cart', JSON.stringify(cart));
+        updateCartUI();
+     
+        const offcanvas = new bootstrap.Offcanvas(document.getElementById('cartSidebar'));
+        offcanvas.show();
+    }
+
+    function updateCartUI() {
+        const cartItems = document.getElementById('cartItems');
+        const count = document.getElementById('cartCount');
+        const total = document.getElementById('cartTotal');
+        
+        count.innerText = cart.length;
+        
+        if (cart.length === 0) {
+            cartItems.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-ice-cream fs-1 text-muted mb-3 opacity-25"></i>
+                    <p class="text-muted">Your bag is currently empty.</p>
+                </div>`;
+            total.innerText = '₹0';
+            return;
+        }
+
+        let sum = 0;
+        cartItems.innerHTML = cart.map((item, index) => {
+            sum += item.price;
+            return `
+                <div class="cart-item d-flex align-items-center">
+                    <img src="${item.img}" width="60" height="60" class="rounded-3 me-3 shadow-sm" style="object-fit:cover">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0 fw-bold">${item.name}</h6>
+                        <span class="text-muted">${formatINR(item.price)}</span>
+                    </div>
+                    <button class="btn btn-link text-danger p-0" onclick="removeFromCart(${index})">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            `;
+        }).join('');
+        
+        total.innerText = formatINR(sum);
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        localStorage.setItem('vm_cart', JSON.stringify(cart));
+        updateCartUI();
+    }
+
+    function joinClub() {
+        alert("Welcome to the VM Membership Club!\n\nAs a member, you'll get:\n• 10% off every order\n• Access to secret flavors\n• Invitation to tasting events");
+    }
+
+    function checkout() {
+        if(cart.length === 0) return alert("Please add some treats to your bag first!");
+        alert("Order received! Our specialized cold-chain delivery team will arrive within 60 minutes. Enjoy your Belgian treats!");
+        cart = [];
+        localStorage.removeItem('vm_cart');
+        updateCartUI();
+    }
+</script>
+
+</body>
+</html>
